@@ -1,6 +1,7 @@
 ﻿using pokeman.Data;
 using pokeman.Interface;
 using pokeman.Models;
+using System.Net.Mime;
 
 namespace pokeman.Repository
 {
@@ -19,12 +20,20 @@ namespace pokeman.Repository
 
         public Pokemon GetPokemon(string name)
         {
-            throw new NotImplementedException();
+            return context.Pokemon.Where(c => c.Name == name).FirstOrDefault();
         }
 
         public decimal GetPokemonReting(int pokemonId)
         {
-            throw new NotImplementedException();
+           var review= context.Reviews.Where(c => c.Pokemon.Id == pokemonId);
+
+            if (review.Count() <= 0) {
+
+                return 0;
+            }
+
+            return ((decimal)review.Sum(r => r.Rating) / review.Count());
+             
         }
 
         public ICollection<Pokemon> GetPokemons() { 
@@ -34,7 +43,7 @@ namespace pokeman.Repository
 
         public bool PokemonExcist(int pokeId)
         {
-            throw new NotImplementedException();
+            return context.Pokemon.Any(p => p.Id == pokeId);
         }
     }
 }

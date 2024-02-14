@@ -27,6 +27,39 @@ namespace pokeman.Controllers
 
             return Ok(pokemon);
         }
+
+        [HttpGet("{pokeId}")]
+        public IActionResult GetPokemon(int pokeId) {
+
+            if (!_pokemonRepository.PokemonExcist(pokeId))
+            {
+                return NotFound();
+
+
+            }
+            var pokemons = _pokemonRepository.GetPokemon(pokeId);
+            if (!ModelState.IsValid) {
+
+                return BadRequest(ModelState);
+            }
+            return Ok(pokemons);
+        }
+
+        [HttpGet("{pokeId}/rating")]
+        public IActionResult getPokemonRating(int pokeId) {
+
+            if (!_pokemonRepository.PokemonExcist(pokeId)) {
+
+                return NotFound();
+            }
+
+            var rating = _pokemonRepository.GetPokemonReting(pokeId);
+            if (!ModelState.IsValid) {
+                return BadRequest();
+            }
+
+            return Ok(rating);
+        }
          
     }
 }
