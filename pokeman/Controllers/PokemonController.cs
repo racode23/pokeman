@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using pokeman.Dto;
 using pokeman.Interface;
 using pokeman.Models;
 
@@ -10,16 +12,18 @@ namespace pokeman.Controllers
     public class PokemonController : ControllerBase
     {
         private readonly IPokemonRepository _pokemonRepository;
-        public PokemonController(IPokemonRepository pokemonRepository)
+        private readonly IMapper _mapper;
+        public PokemonController(IPokemonRepository pokemonRepository,IMapper mapper)
         {
             this._pokemonRepository = pokemonRepository;
+            this. _mapper=mapper;
         }
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Pokemon>))]
         public IActionResult GetPokeMons() {
 
-            var pokemon = _pokemonRepository.GetPokemons();
+            var pokemon = _mapper.Map<List<PokemonDto>>(_pokemonRepository.GetPokemons());
 
             if (!ModelState.IsValid) { 
                return BadRequest(ModelState);
